@@ -20,12 +20,10 @@ namespace BudgetCalculator
                 throw new ArgumentException();
             }
 
-            return IsSameMonth(start, end)
-                ? GetOneMonthAmount(start, end)
-                : GetRangeMonthAmount(start, end);
+            return GetResult(start, end);
         }
 
-        private decimal GetRangeMonthAmount(DateTime start, DateTime end)
+        private decimal GetResult(DateTime start, DateTime end)
         {
             var monthCount = end.MonthDifference(start);
             var total = 0;
@@ -33,7 +31,7 @@ namespace BudgetCalculator
             {
                 if (index == 0)
                 {
-                    total += GetOneMonthAmount(start, start.LastDate());
+                    total += GetOneMonthAmount(start, monthCount > 0 ? start.LastDate() : end);
                 }
                 else if (index == monthCount)
                 {
@@ -46,11 +44,6 @@ namespace BudgetCalculator
                 }
             }
             return total;
-        }
-
-        private bool IsSameMonth(DateTime start, DateTime end)
-        {
-            return start.Year == end.Year && start.Month == end.Month;
         }
 
         private int GetOneMonthAmount(DateTime start, DateTime end)
